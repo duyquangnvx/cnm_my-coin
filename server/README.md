@@ -1,0 +1,1 @@
+# cmn_mycoin_server
