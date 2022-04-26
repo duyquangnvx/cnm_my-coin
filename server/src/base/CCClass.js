@@ -80,11 +80,11 @@ var ClassManager = {
         // these function properties cacheable in Carakan.
         var desc = { writable: true, enumerable: false, configurable: true };
 
-        prototype.__instanceId = null;
+        // prototype.__instanceId = null;
 
         // The dummy Class constructor
         function Class() {
-            this.__instanceId = ClassManager.getNewInstanceId();
+            // this.__instanceId = ClassManager.getNewInstanceId();
             // All construction is actually done in the init method
             if (this.ctor)
                 this.ctor.apply(this, arguments);

@@ -2,28 +2,27 @@ const crypto = require('crypto');
 const cc = require("../../../base/CCClass");
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
+const uuid = require('uuidv1');
+const Utility = require("../../../Utility"); //generate unique transaction id.
 
 
 let Transaction = cc.Class.extend({
-    fromAddress: null,
-    toAddress: null,
-    amount: null,
-    timestamp: null,
-
     /**
-     * @param {string} fromAddress
-     * @param {string} toAddress
      * @param {number} amount
+     * @param {string} sender
+     * @param {string} recipient
      */
-    ctor: function (fromAddress, toAddress, amount) {
-        this.fromAddress = fromAddress;
-        this.toAddress = toAddress;
+    ctor: function (amount, sender, recipient) {
+        this.transactionId = uuid().split('-').join('');
         this.amount = amount;
         this.timestamp = Date.now();
+        this.date = Utility.getDateString();
+        this.sender = sender;
+        this.recipient = recipient;
     },
 
     calculateHash: function () {
-        return crypto.createHash('sha256').update(this.fromAddress + this.toAddress + this.amount + this.timestamp).digest('hex');
+        return crypto.createHash('sha256').update(this.sender + this.recipient + this.amount + this.timestamp).digest('hex');
     },
 
     signTransactionWithPrivateKey: function (privateKey) {
@@ -32,7 +31,7 @@ let Transaction = cc.Class.extend({
     },
 
     signTransaction: function (signingKey) {
-        if (signingKey.getPublic('hex') !== this.fromAddress) {
+        if (signingKey.getPublic('hex') !== this.sender) {
             console.log("[Transaction] signTransaction", 'You cannot sign transactions for other wallets!');
             return;
         }
@@ -43,7 +42,7 @@ let Transaction = cc.Class.extend({
     },
 
     isValid: function () {
-        if (this.fromAddress === null) {
+        if (this.sender === null) {
             return true;
         }
 
@@ -52,12 +51,12 @@ let Transaction = cc.Class.extend({
             return false;
         }
 
-        const publicKey = ec.keyFromPublic(this.fromAddress, 'hex');
+        const publicKey = ec.keyFromPublic(this.sender, 'hex');
         return publicKey.verify(this.calculateHash(), this.signature);
     },
 
     equals: function (transaction) {
-        return this.fromAddress === transaction.fromAddress && this.toAddress === transaction.toAddress && this.amount === transaction.amount && this.timestamp === transaction.timestamp && this.signature === transaction.signature;
+        return this.sender === transaction.sender && this.recipient === transaction.recipient && this.amount === transaction.amount && this.timestamp === transaction.timestamp && this.signature === transaction.signature;
     },
 })
 

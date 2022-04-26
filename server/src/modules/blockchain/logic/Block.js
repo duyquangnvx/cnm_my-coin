@@ -3,19 +3,24 @@ const crypto = require("crypto");
 
 const Block = cc.Class.extend({
     /**
+     * @param {Number} index
      * @param {number} timestamp
-     * @param {Transaction[]} data
+     * @param {string} date
+     * @param {Transaction[]} transactions
+     * @param {Number} nonce
      * @param {string} previousHash
      */
-    ctor: function (timestamp, transactions, previousHash = '') {
+    ctor: function (index, timestamp, date, transactions, nonce, previousHash = '') {
+        this.index = index;
         this.timestamp = timestamp;
+        this.date = date;
         this.transactions = transactions;
         this.previousHash = previousHash;
         this.hash = this.calculateHash();
         this.nonce = 0;
     },
     calculateHash: function () {
-        return crypto.createHash('sha256').update(this.previousHash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).digest('hex');
+        return crypto.createHash('sha256').update(this.index + this.timestamp + this.previousHash + JSON.stringify(this.transactions) + this.nonce).digest('hex');
     },
     /***
      * using proof of work
