@@ -6,7 +6,6 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const routes = require('./routers/index')(io);
 
-
 app.use(routes);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

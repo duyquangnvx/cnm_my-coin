@@ -1,6 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
+router.get('/', function(req, res, next) {
+    console.log(__dirname);
+    res.sendFile(__dirname + "/index.html");
+});
+
 module.exports = function (io) {
     //Socket.IO
     io.on('connection', function (socket) {
