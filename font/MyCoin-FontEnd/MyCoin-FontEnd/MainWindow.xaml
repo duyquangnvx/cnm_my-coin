@@ -1,0 +1,108 @@
+﻿<Window x:Class="MyCoin_FontEnd.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MyCoin_FontEnd"
+        mc:Ignorable="d"
+        
+        xmlns:uc="clr-namespace:MyCoin_FontEnd.UC"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"       
+        Title="Main Window" Height="600" Width="1024"
+        DataContext="{StaticResource MainVM}"
+        x:Name="MainWd">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <uc:ControlBarUC Tag="{Binding ElementName=MainWd, Path=Title}"/>
+        </Grid>
+
+        <Grid>
+            <Button x:Name="btnConnect" Width="150" Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4" Command="{Binding ConnectSocketServer}">
+                <Grid Width="150">
+                    <materialDesign:PackIcon Kind="NewBox" VerticalAlignment="Center"/>
+                    <TextBlock Text="Connect" HorizontalAlignment="Center"></TextBlock>
+                </Grid>
+            </Button>
+        </Grid>
+        
+        <!--<Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <StackPanel.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="LightGray" Offset="1"/>
+                        <GradientStop Color="#FFE6E6E6"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+
+                <StackPanel.Effect>
+                    <DropShadowEffect BlurRadius="20" Color="#FFDEDEDE" RenderingBias="Quality" ShadowDepth="1"/>
+                </StackPanel.Effect>
+
+                <Grid Height="100" Background="#FF6F8AE4">
+                    <TextBlock Text="8 Puzzle" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF96B2EA" FontSize="36" FontFamily="Showcard Gothic"/>
+                </Grid>
+
+                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
+                    <Grid Width="150">
+                        <materialDesign:PackIcon Kind="GamepadVariantOutline" VerticalAlignment="Center"/>
+                        <TextBlock Text="CHƠI TIẾP" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+                <Button x:Name="btnNewGame" Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
+                    <Grid Width="150">
+                        <materialDesign:PackIcon Kind="NewBox" VerticalAlignment="Center"/>
+                        <TextBlock Text="CHƠI MỚI" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
+                    <Grid Width="150">
+                        <materialDesign:PackIcon Kind="Image" VerticalAlignment="Center"/>
+                        <TextBlock Text="CHỌN ẢNH" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
+                    <Grid Width="150">
+                        <materialDesign:PackIcon Kind="HelpBox" VerticalAlignment="Center"/>
+                        <TextBlock Text="GIÚP ĐỠ" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
+                    <Grid Width="150">
+                        <materialDesign:PackIcon Kind="InfoCircle" VerticalAlignment="Center"/>
+                        <TextBlock Text="THÔNG TIN" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
+                    <Grid Width="150">
+                        <materialDesign:PackIcon Kind="ExitToApp" VerticalAlignment="Center"/>
+                        <TextBlock Text="THOÁT" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+
+            </StackPanel>
+
+        </Grid>-->
+    </DockPanel>
+</Window>
