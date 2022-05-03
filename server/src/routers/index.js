@@ -15,6 +15,15 @@ module.exports = function (io) {
             console.log('Successful Socket Test');
         });
 
+        socket.onAny((event, data) => {
+
+        });
+
+        socket.on('CREATE_NEW_WALLET', (name, pass) => {
+            console.log("Create-Wallet", name, pass);
+            socket.emit('CREATE_NEW_WALLET', {name: "TomQ", pass: "123"});
+        })
+
         //End ON Events
     });
     return router;
