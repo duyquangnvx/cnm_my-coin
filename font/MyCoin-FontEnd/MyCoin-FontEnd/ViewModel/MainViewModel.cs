@@ -1,4 +1,5 @@
-﻿using Simple_Caro.Utility;
+﻿using MyCoin_FontEnd.SocketClient;
+using SocketIOClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,41 @@ namespace MyCoin_FontEnd.ViewModel
 
         public MainViewModel()
         {
-            Connector.Init();
-            Connector.Instance.Connect();
+            SocketClient.SocketClient.Connector.Connect();
+            SocketClient.SocketClient.Connector.OnReceived += OnReceived;
 
+            InitCommands();
+        }
 
+        private void InitCommands()
+        {
+            ConnectSocketServer = new RelayCommand<object>(
+                (p) =>
+                {
+                    return true;
+                },
+                (p) =>
+                {
+                    var packet = new OutPacket(SocketClient.SocketClient.EventName.CREATE_NEW_WALLET);
+                    SocketClient.SocketClient.Connector.SendPacket(packet);
+                }
+            );
+        }
+
+        private void OnReceived(string eventName, SocketIOResponse response)
+        {
+            switch (eventName)
+            {
+                case SocketClient.SocketClient.EventName.CREATE_NEW_WALLET:
+                    ProcessCreateWallet(response);
+                    break;
+            }
+        }
+
+        private void ProcessCreateWallet(SocketIOResponse response)
+        {
+            var packet = new InPacket(response);
+            var data = packet.Data;
         }
     }
 }

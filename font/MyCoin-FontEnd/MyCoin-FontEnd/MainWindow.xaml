@@ -19,7 +19,7 @@
         ResizeMode="NoResize"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"       
-        Title="Main Window" Height="600" Width="1024"
+        Title="My Coin" Height="600" Width="1024"
         DataContext="{StaticResource MainVM}"
         x:Name="MainWd">
     <DockPanel>
