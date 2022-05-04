@@ -17,8 +17,7 @@ namespace MyCoin_FontEnd.ViewModel
 
         public MainViewModel()
         {
-            SocketClient.SocketClient.Connector.Connect();
-            SocketClient.SocketClient.Connector.OnReceived += OnReceived;
+            
 
             InitCommands();
         }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace MyCoin_FontEnd.SocketClient
 {
@@ -22,6 +23,7 @@ namespace MyCoin_FontEnd.SocketClient
         public static class EventName
         {
             public const string CREATE_NEW_WALLET = "CREATE_NEW_WALLET";
+            public const string ACCESS_MY_WALLET = "ACCESS_MY_WALLET";
         }
     }
 
@@ -35,8 +37,8 @@ namespace MyCoin_FontEnd.SocketClient
             socketClient = new SocketIO(uri);
             socketClient.OnConnected += OnFinishConnect;
             socketClient.OnDisconnected += OnDisconnected;
-            socketClient.OnAny((eventName, reponse) => OnReceived(eventName, reponse));
-
+            socketClient.OnAny((eventName, reponse) => OnReceivedPacket(eventName, reponse));
+            
             var jsonSerializer = new NewtonsoftJsonSerializer();
             jsonSerializer.OptionsProvider = () => new JsonSerializerSettings
             {
@@ -46,8 +48,6 @@ namespace MyCoin_FontEnd.SocketClient
                 }
             };
             socketClient.JsonSerializer = jsonSerializer;
-
-            OnReceived += OnReceivedPacket;
         }
         public SocketIO getNetwork()
         {
@@ -81,7 +81,12 @@ namespace MyCoin_FontEnd.SocketClient
         }
         public void OnReceivedPacket(string eventName, SocketIOResponse response)
         {
-            Console.WriteLine($"OnReceivedPacket {eventName}");
+            
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Console.WriteLine($"OnReceivedPacket {eventName}");
+                OnReceived.Invoke(eventName, response);
+            });
         }
     }
 

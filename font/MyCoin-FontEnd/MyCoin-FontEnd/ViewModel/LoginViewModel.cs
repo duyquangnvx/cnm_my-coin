@@ -80,8 +80,8 @@ namespace MyCoin_FontEnd.ViewModel
                 this.guiCreateWalletSuccess = new CreateWalletSuccessWindow();
                 this.guiCreateWalletSuccess.DataContext = this;
             }
-            
-            guiCreateWalletSuccess.ShowDialog();
+
+            guiCreateWalletSuccess.ShowDialog();              
         }
         public void HideGuiCreateWalletSuccessful()
         {
@@ -109,6 +109,7 @@ namespace MyCoin_FontEnd.ViewModel
             }
         }
 
+        [STAThread]
         private void OnReceived(string eventName, SocketIOResponse response)
         {
             switch (eventName)
