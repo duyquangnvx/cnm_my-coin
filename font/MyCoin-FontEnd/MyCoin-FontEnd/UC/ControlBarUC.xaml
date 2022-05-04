@@ -23,7 +23,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid Height="30" Background="{DynamicResource SecondaryAccentBrush}" >
+    <Grid Height="30" Background="{DynamicResource SecondaryHueMidBrush}" >
         <DockPanel Margin="10 0 10 0" LastChildFill="False">
             <StackPanel
                 DockPanel.Dock="Left"

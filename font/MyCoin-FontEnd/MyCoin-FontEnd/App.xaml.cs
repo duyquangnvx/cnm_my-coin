@@ -13,7 +13,13 @@ namespace MyCoin_FontEnd
     /// </summary>
     public partial class App : Application
     {
-           
+        protected override void OnStartup(System.Windows.StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            this.MainWindow = new LoginWindow();
+            this.MainWindow.Show();
+        }
     }
 
 }

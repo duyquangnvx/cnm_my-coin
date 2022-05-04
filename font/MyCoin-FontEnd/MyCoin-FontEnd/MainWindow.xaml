@@ -28,15 +28,6 @@
         </Grid>
 
         <Grid>
-            <Button x:Name="btnConnect" Width="150" Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4" Command="{Binding ConnectSocketServer}">
-                <Grid Width="150">
-                    <materialDesign:PackIcon Kind="NewBox" VerticalAlignment="Center"/>
-                    <TextBlock Text="Connect" HorizontalAlignment="Center"></TextBlock>
-                </Grid>
-            </Button>
-        </Grid>
-        
-        <!--<Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="*"/>
@@ -103,6 +94,6 @@
 
             </StackPanel>
 
-        </Grid>-->
+        </Grid>
     </DockPanel>
 </Window>

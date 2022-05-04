@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCoin-FontEnd", "Simple-Caro\MyCoin-FontEnd.csproj", "{CB9B94FA-9C88-4DA7-8511-3264DB190864}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCoin-FontEnd", "MyCoin-FontEnd\MyCoin-FontEnd.csproj", "{CB9B94FA-9C88-4DA7-8511-3264DB190864}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {02DE4E50-9F17-4C09-A8D4-B4A7A66E123E}
+		SolutionGuid = {70124C75-85CA-4345-BBF0-7DE13F28B2D0}
 	EndGlobalSection
 EndGlobal
