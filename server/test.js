@@ -1,4 +1,4 @@
-const {Block, Blockchain, Transaction } = require('./src/modules/blockchain/logic');
+const {Block, Blockchain, Transaction } = require('./src/blockchain/logic');
 
 const bitcoin = new Blockchain();
 

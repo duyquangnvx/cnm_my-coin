@@ -1,4 +1,4 @@
-const cc = require("../../../base/CCClass");
+const cc = require("../../base/CCClass");
 
 const Wallet = cc.Class.extend({
     ctor: function (publicKey, privateKey) {

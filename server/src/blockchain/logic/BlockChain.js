@@ -1,4 +1,4 @@
-const cc = require("../../../base/CCClass");
+const cc = require("../../base/CCClass");
 const Block = require("./Block");
 const Transaction = require("./Transaction");
 const currentNodeUrl = process.argv[3];

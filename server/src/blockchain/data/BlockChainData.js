@@ -1,5 +1,4 @@
-import BlockChain from "../logic/BlockChain";
-import Blockchain from "../logic/BlockChain";
+const Blockchain = require("../logic/BlockChain");
 
 const BlockChainData = (function () {
 
@@ -27,4 +26,4 @@ const BlockChainData = (function () {
 
 })();
 
-export default BlockChainData;
+module.exports = BlockChainData;

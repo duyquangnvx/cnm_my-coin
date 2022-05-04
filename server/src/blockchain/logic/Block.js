@@ -1,4 +1,4 @@
-const cc = require("../../../base/CCClass");
+const cc = require("../../base/CCClass");
 const crypto = require("crypto");
 
 const Block = cc.Class.extend({

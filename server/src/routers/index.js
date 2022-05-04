@@ -1,4 +1,8 @@
 var express = require('express');
+
+const {createNewWallet} = require("../blockchain/logic/KeyGenerator");
+const BlockChainData = require("../blockchain/data/BlockChainData");
+
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
@@ -8,23 +12,31 @@ router.get('/', function(req, res, next) {
 
 module.exports = function (io) {
     //Socket.IO
-    io.on('connection', function (socket) {
-        console.log('User has connected to Index');
-        //ON Events
-        socket.on('admin', function () {
-            console.log('Successful Socket Test');
-        });
+    BlockChainData.init();
 
+    io.on('connection', (socket) => {
+        console.log("New user connected", socket.id);
+
+        //
         socket.onAny((event, data) => {
+            switch (event) {
+                case 'CREATE_NEW_WALLET':
+                    let wallet = createNewWallet();
+                    console.log(JSON.stringify(wallet));
+                    socket.emit('CREATE_NEW_WALLET', wallet);
+                    break;
+                case 'ACCESS_MY_WALLET':
 
+                    break;
+            }
         });
-
-        socket.on('CREATE_NEW_WALLET', (name, pass) => {
-            console.log("Create-Wallet", name, pass);
-            socket.emit('CREATE_NEW_WALLET', {name: "TomQ", pass: "123"});
-        })
-
         //End ON Events
     });
+
+    io.on('disconnect', (socket) => {
+        console.log(`User: ${socket.id} was disconnected`);
+        BlockChainData.removeNodeBySocketId(socket.id.toString());
+    });
+
     return router;
 };

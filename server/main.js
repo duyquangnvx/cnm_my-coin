@@ -1,5 +1,5 @@
-const {Block, Blockchain, Transaction } = require('./src/modules/blockchain/logic');
-const {createNewWallet} = require("./src/modules/blockchain/logic/KeyGenerator");
+const {Block, Blockchain, Transaction } = require('./src/blockchain/logic');
+const {createNewWallet} = require("./src/blockchain/logic/KeyGenerator");
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 

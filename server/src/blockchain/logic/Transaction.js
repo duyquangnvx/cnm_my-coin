@@ -1,9 +1,9 @@
 const crypto = require('crypto');
-const cc = require("../../../base/CCClass");
+const cc = require("../../base/CCClass");
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 const uuid = require('uuidv1');
-const Utility = require("../../../Utility"); //generate unique transaction id.
+const Utility = require("../../Utility"); //generate unique transaction id.
 
 
 let Transaction = cc.Class.extend({
