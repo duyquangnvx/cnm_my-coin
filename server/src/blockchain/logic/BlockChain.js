@@ -17,16 +17,15 @@ const BlockChain = cc.Class.extend({
         this.chain = [this.createGenesisBlock()];
         this.pendingTransactions = [];
 
-        this.difficulty = 5;
+        this.difficulty = 1;
         this.miningReward = 100;
     },
 
-    createNewBlock: function (nonce, previousBlockHash) {
+    createNewBlock: function (previousBlockHash) {
         let index = this.chain.length + 1;
         let timestamp = Date.now();
-        let date = new Date().toString();
         let transactions = this.pendingTransactions;
-        let newBlock = new Block(index, timestamp, date, transactions, nonce, previousBlockHash);
+        let newBlock = new Block(index, timestamp, transactions, previousBlockHash);
 
         this.pendingTransactions = [];  //reset the pendingTransactions for the next block.
         this.chain.push(newBlock);  //push to the blockchain the new block.
@@ -34,9 +33,8 @@ const BlockChain = cc.Class.extend({
     },
 
     createGenesisBlock: function () {
-        return new Block(0, Date.now(), new Date().toString(), [], 100, '0');
+        return new Block(1, 1651730515072, [] , '0');
     },
-
     getLatestBlock: function () {
         return this.chain[this.chain.length - 1];
     },
@@ -48,19 +46,8 @@ const BlockChain = cc.Class.extend({
      * @param {string} recipient
      * @returns {Transaction}
      */
-    createNewTransaction: function (amount, sender, recipient) {
-        return new Transaction(amount, sender, recipient);
-    },
-
-    /**
-     *
-     * @param {Transaction} transaction
-     * @return {number} return next index of current chain
-     */
-    addTransactionToPendingTransactions: function (transaction) {
-        this.pendingTransactions.push(transaction);
-        let latestBlock = this.getLatestBlock();
-        return latestBlock.index + 1;
+    createNewTransaction: function (sender, recipient, amount) {
+        return new Transaction(sender, recipient, amount);
     },
 
     proofOfWork: function (previousBlockHash, current) {
@@ -99,27 +86,7 @@ const BlockChain = cc.Class.extend({
         return true;
     },
 
-    getBlockByHash: function (blockHash) {
-        return this.chain.find(block => block.hash = blockHash);
-    },
-    getTransactionAndBlockItBelongsToByTransactionId: function (transactionId) {
-        for (let i = 0; i < this.chain.length; i++) {
-            let block = this.chain[i];
-            for (let j = 0; j < block.transactions.length; j++) {
-                let transaction = block.transactions[j];
-                if (transaction.transactionId === transactionId) {
-                    return {
-                        transaction: transaction,
-                        block: block
-                    };
-                }
-            }
-        }
-        return {transaction: null, block: null};
-    },
-    getPendingTransactions: function () {
-        return this.pendingTransactions;
-    },
+
 
     getAddressData: function (address) {
         const addressTransactions = [];
@@ -130,10 +97,6 @@ const BlockChain = cc.Class.extend({
                 }
             });
         });
-
-        if (addressTransactions.length === 0) {
-            return false;
-        }
 
         var amountArr = [];
 
@@ -147,7 +110,6 @@ const BlockChain = cc.Class.extend({
                 balance -= transaction.amount;
                 amountArr.push(balance);
             }
-
         });
 
         return {
@@ -159,10 +121,11 @@ const BlockChain = cc.Class.extend({
 
     //
     mineTransactionInTransactionPool: function (miningRewardAddress) {
-        const rewardTx = new Transaction(null, miningRewardAddress, this.miningReward);
+        const rewardTx = this.createNewTransaction('system-reward', miningRewardAddress, this.miningReward);
         this.pendingTransactions.push(rewardTx);
 
-        const block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
+        // const block = this.createNewBlock(this.getLatestBlock().hash);
+        const block = new Block(this.chain.length + 1, Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
         block.mineBlock(this.difficulty);
 
         console.log('Block successfully mined!');
@@ -172,8 +135,8 @@ const BlockChain = cc.Class.extend({
         this.pendingTransactions = [];
     },
 
-    addTransaction: function (transaction) {
-        if (!transaction.fromAddress || !transaction.toAddress) {
+    addTransactionToPendingTransactions: function (transaction) {
+        if (!transaction.sender || !transaction.recipient) {
             console.log('[BlockChain] addTransaction', 'Transaction must include from and to address');
             return;
         }
@@ -190,7 +153,7 @@ const BlockChain = cc.Class.extend({
         }
 
         // Making sure that the amount sent is not greater than existing balance
-        const walletBalance = this.getBalanceOfAddress(transaction.fromAddress);
+        const walletBalance = this.getBalanceOfAddress(transaction.sender);
         if (walletBalance < transaction.amount) {
             console.log('[BlockChain] addTransaction', 'Not enough balance');
             return;
@@ -198,7 +161,7 @@ const BlockChain = cc.Class.extend({
 
         // Get all other pending transactions for the "from" wallet
         const pendingTxForWallet = this.pendingTransactions
-            .filter(tx => tx.fromAddress === transaction.fromAddress);
+            .filter(tx => tx.sender === transaction.sender);
 
         // If the wallet has more pending transactions, calculate the total amount
         // of spend coins so far. If this exceeds the balance, we refuse to add this
@@ -218,6 +181,7 @@ const BlockChain = cc.Class.extend({
 
         this.pendingTransactions.push(transaction);
         console.log('[BlockChain] addTransaction', 'transaction added: ' + JSON.stringify(transaction));
+        return true;
     },
 
     getBalanceOfAddress: function (address) {
@@ -226,11 +190,11 @@ const BlockChain = cc.Class.extend({
         for (const block of this.chain) {
             let transactions = block.transactions;
             for (const trans of transactions) {
-                if (trans.fromAddress === address) {
+                if (trans.sender === address) {
                     balance -= trans.amount;
                 }
 
-                if (trans.toAddress === address) {
+                if (trans.recipient === address) {
                     balance += trans.amount;
                 }
             }
@@ -245,7 +209,7 @@ const BlockChain = cc.Class.extend({
         for (const block of this.chain) {
             let transactions = block.transactions;
             for (const tx of transactions) {
-                if (tx.fromAddress === address || tx.toAddress === address) {
+                if (tx.sender === address || tx.recipient === address) {
                     txs.push(tx);
                 }
             }

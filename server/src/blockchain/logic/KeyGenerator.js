@@ -1,17 +1,19 @@
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 const fs = require('fs');
-const {Wallet} = require("./index");
 
-function createNewWallet() {
+function generateKeyPair () {
     const key = ec.genKeyPair();
     const publicKey = key.getPublic('hex');
     const privateKey = key.getPrivate('hex');
-
+    
     fs.appendFileSync('masterKeysForDelete.txt', '\nprivateKey: ' + privateKey);
     fs.appendFileSync('masterKeysForDelete.txt', '\npublicKey: ' + publicKey);
 
-    return new Wallet(publicKey, privateKey);
+    return {
+        privateKey: privateKey,
+        publicKey: publicKey
+    };
 }
 
-module.exports = { createNewWallet };
+module.exports = { generateKeyPair };

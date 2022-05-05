@@ -8,11 +8,11 @@ const Utility = require("../../Utility"); //generate unique transaction id.
 
 let Transaction = cc.Class.extend({
     /**
-     * @param {number} amount
      * @param {string} sender
      * @param {string} recipient
+     * @param {number} amount
      */
-    ctor: function (amount, sender, recipient) {
+    ctor: function (sender, recipient, amount) {
         this.transactionId = uuid().split('-').join('');
         this.amount = amount;
         this.timestamp = Date.now();
@@ -31,18 +31,24 @@ let Transaction = cc.Class.extend({
     },
 
     signTransaction: function (signingKey) {
+        if (this.sender === 'system-reward') {
+            console.log("[Transaction] signTransaction", 'system transaction');
+            return true;
+        }
+
         if (signingKey.getPublic('hex') !== this.sender) {
             console.log("[Transaction] signTransaction", 'You cannot sign transactions for other wallets!');
-            return;
+            return false;
         }
 
         const hashTx = this.calculateHash();
         const sig = signingKey.sign(hashTx, 'base64');
         this.signature = sig.toDER('hex');
+        return true;
     },
 
     isValid: function () {
-        if (this.sender === null) {
+        if (this.sender === 'system-reward') {
             return true;
         }
 

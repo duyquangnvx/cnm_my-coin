@@ -5,19 +5,18 @@ const Block = cc.Class.extend({
     /**
      * @param {Number} index
      * @param {number} timestamp
-     * @param {string} date
      * @param {Transaction[]} transactions
      * @param {Number} nonce
      * @param {string} previousHash
      */
-    ctor: function (index, timestamp, date, transactions, nonce, previousHash = '') {
+    ctor: function (index, timestamp, transactions, previousHash = '') {
         this.index = index;
         this.timestamp = timestamp;
-        this.date = date;
         this.transactions = transactions;
         this.previousHash = previousHash;
-        this.hash = this.calculateHash();
         this.nonce = 0;
+        this.hash = this.calculateHash();
+        console.log('create hash', this.hash, this.index);
     },
     calculateHash: function () {
         return crypto.createHash('sha256').update(this.index + this.timestamp + this.previousHash + JSON.stringify(this.transactions) + this.nonce).digest('hex');
@@ -33,7 +32,7 @@ const Block = cc.Class.extend({
             this.hash = this.calculateHash();
         }
 
-        console.log("Block mined: " + this.hash);
+        console.log("Block mined: " + this.hash, this.index);
     },
 
     hasValidTransaction: function () {
