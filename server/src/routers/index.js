@@ -25,6 +25,16 @@ module.exports = function (io) {
                 pendingTransactions: pendingTransactions
             });
         };
+        let broadcastAddressData = function (nodes) {
+            nodes.forEach(socketNode => {
+                const address = socketNode.currentNodeUrl;
+                const socket = io.sockets.sockets.get(socketNode.socketId);
+                if (socket) {
+                    emitAddressData(socket, address);
+                }
+            })
+        };
+
         let emitAddressData = function (socket, address) {
             const addressData = BlockChainData.backup.getAddressData(address);
             if (addressData !== undefined) {
@@ -40,7 +50,8 @@ module.exports = function (io) {
         socket.onAny((event, data) => {
             switch (event) {
                 case 'CREATE_NEW_WALLET':
-                    BlockChainData.nodes.push(new Blockchain(socket.id));
+                    const node = new Blockchain(socket.id);
+                    BlockChainData.nodes.push(node);
                     let keyPair = generateKeyPair();
                     let address = keyPair.publicKey;
                     socket.emit('CREATE_NEW_WALLET', {
@@ -52,8 +63,26 @@ module.exports = function (io) {
                     break;
                 case 'GET_WALLET_DATA':
                     if (data.length >= 1) {
-                        let address = data[0];
+                        const address = data[0];
                         emitAddressData(socket, address);
+                    }
+                    break;
+                case 'MINE_BLOCK':
+                    if (data.length >= 1) {
+                        const address = data[0];
+                        BlockChainData.backup.mineTransactionInTransactionPool(address);
+                        const reward = BlockChainData.backup.miningReward;
+                        socket.emit('MINE_BLOCK', {
+                            reward: reward
+                        });
+                        emitAddressData(socket, address);
+                        broadcastPendingTransaction(BlockChainData.backup.pendingTransactions);
+
+                        const lastBlock = BlockChainData.backup.getLatestBlock();
+                        const transactions = lastBlock.transactions;
+                        for (const trans in transactions) {
+
+                        }
                     }
                     break;
                 case 'CREATE_TRANSACTION':
@@ -65,14 +94,16 @@ module.exports = function (io) {
                         const newTransaction = BlockChainData.getLastNode().createNewTransaction(sender, recipient, amount);
                         newTransaction.signTransactionWithPrivateKey(privateKey);
                         const ret = BlockChainData.backup.addTransactionToPendingTransactions(newTransaction);
-                        if (ret) {
-                            let pt = null;
-                            BlockChainData.nodes.forEach(socketNode => {
-                                socketNode.addTransactionToPendingTransactions(newTransaction);
-                                pt = socketNode.pendingTransactions;
-                            });
-                            broadcastPendingTransaction(pt);
-                        }
+                        console.log('[CREATE_TRANSACTION] ', BlockChainData.backup.getBalanceOfAddress(sender));
+                        broadcastPendingTransaction(BlockChainData.backup.pendingTransactions);
+                        // if (ret) {
+                        //     let pt = null;
+                        //     BlockChainData.nodes.forEach(socketNode => {
+                        //         socketNode.addTransactionToPendingTransactions(newTransaction);
+                        //         pt = socketNode.pendingTransactions;
+                        //     });
+                        //
+                        // }
                     }
                     break;
             }

@@ -19,6 +19,7 @@ const BlockChainData = (function () {
             master.signTransactionWithPrivateKey(systemKey.privateKey);
             lastBlock.transactions.push(master);
             lastBlock.hash = lastBlock.calculateHash();
+            this.systemKey = systemKey;
         },
         reset: function () {
             this.init();

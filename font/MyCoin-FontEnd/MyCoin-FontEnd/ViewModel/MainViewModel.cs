@@ -21,6 +21,7 @@ namespace MyCoin_FontEnd.ViewModel
         private float _transactionAmount = 0f;
         private string _transactionToAddress = String.Empty;
         private string _transactionPrivateKey = String.Empty;
+        private bool _isMining = false;
 
         public MainWindow MainWindow { get; set; }
         public InputTransactionWindow InputTransactionWindow { get; set; }
@@ -35,6 +36,7 @@ namespace MyCoin_FontEnd.ViewModel
         public string TransactionPrivateKey { get => _transactionPrivateKey; set { _transactionPrivateKey = value; OnPropertyChanged(); } }
         public float TransactionAmount { get => _transactionAmount; set { _transactionAmount = value; OnPropertyChanged(); } }
         public string TransactionToAddress { get => _transactionToAddress; set { _transactionToAddress = value; OnPropertyChanged(); } }
+        public bool IsMining { get => _isMining; set { _isMining = value; OnPropertyChanged(); } }
         #endregion
 
         #region Commands
@@ -65,8 +67,9 @@ namespace MyCoin_FontEnd.ViewModel
                 {
                     var window = new InputTransactionWindow();
                     window.DataContext = this;
+                    window.Owner = Application.Current.MainWindow;
                     window.ShowDialog();
-                    InputTransactionWindow = window;
+                    this.InputTransactionWindow = window;
                 });
             CreateTransactionCmd = new RelayCommand<object[]>(
                 (p) => { return TransactionAmount != 0 && !String.IsNullOrEmpty(TransactionPrivateKey) && !String.IsNullOrEmpty(TransactionToAddress); },
@@ -88,10 +91,13 @@ namespace MyCoin_FontEnd.ViewModel
                     }
                 });
             MiningBlockCmd = new RelayCommand<object[]>(
-                (p) => { return PreviousUC != null; },
+                (p) => { return !IsMining; },
                 (p) =>
                 {
-                    
+                    IsMining = true;
+                    var packet = new OutPacket(SocketClient.SocketClient.EventName.MINE_BLOCK, PublicKey);
+                    SocketClient.SocketClient.Connector.SendPacket(packet);
+
                 });
             BackToPrevScreenCmd = new RelayCommand<object[]>(
                 (p) => { return PreviousUC != null; },
@@ -128,8 +134,7 @@ namespace MyCoin_FontEnd.ViewModel
                 (p) => { return !String.IsNullOrEmpty(PublicKey); },
                 (p) =>
                 {
-                    var packet = new OutPacket(SocketClient.SocketClient.EventName.GET_WALLET_DATA, PublicKey);
-                    SocketClient.SocketClient.Connector.SendPacket(packet);
+                    RequestGetWalletData();
                     this.ShowGuiDashboard();
                 });
 
@@ -142,6 +147,55 @@ namespace MyCoin_FontEnd.ViewModel
                     ShowGuiDashboard();
                 });
         }
+
+        private void RequestGetWalletData()
+        {
+            var packet = new OutPacket(SocketClient.SocketClient.EventName.GET_WALLET_DATA, PublicKey);
+            SocketClient.SocketClient.Connector.SendPacket(packet);
+        }
+
+        [STAThread]
+        private void OnReceived(string eventName, SocketIOResponse response)
+        {
+            var packet = new InPacket(response);
+            var data = packet.Data;
+            switch (eventName)
+            {
+                case SocketClient.SocketClient.EventName.CONNECT_SUCCESS:
+                    ShowGuiLogin();
+                    break;
+                case SocketClient.SocketClient.EventName.CREATE_NEW_WALLET:
+                    PrivateKey = data.GetProperty("privateKey").ToString();
+                    PublicKey = data.GetProperty("publicKey").ToString();                  
+                    this.ShowGuiCreateWalletSuccessful();
+                    break;
+                case SocketClient.SocketClient.EventName.GET_WALLET_DATA:
+                    Balance = (float)data.GetProperty("balance").GetDecimal();
+                    break;
+                case SocketClient.SocketClient.EventName.MINE_BLOCK:
+                    IsMining = false;
+                    var reward = data.GetProperty("reward").GetDecimal();
+                    MessageBox.Show($"You get {reward} coin reward", "Mining Success");
+                    break;
+                case SocketClient.SocketClient.EventName.CREATE_TRANSACTION:
+                    ProcessCreateTransaction(response);
+                    break;
+                case SocketClient.SocketClient.EventName.PENDING_TRANSACTIONS:
+                    var pendingTransactions = data.GetProperty("pendingTransactions");
+                    Console.WriteLine($"pendingTransactions: {pendingTransactions}");
+                    RequestGetWalletData();
+                    break;
+            }
+        }
+        private void ProcessCreateTransaction(SocketIOResponse response)
+        {
+            var packet = new InPacket(response);
+            var data = packet.Data;
+            Console.WriteLine($"[ProcessCreateWallet] {data}");
+           
+        }
+
+
         internal void SwitchScreen(object sender)
         {
             var screen = (UserControl)sender;
@@ -157,7 +211,7 @@ namespace MyCoin_FontEnd.ViewModel
                 OnPropertyChanged(CurrentUC.Name);
             }
         }
- 
+
         public void HideGui(Window gui)
         {
             if (gui != null)
@@ -188,43 +242,5 @@ namespace MyCoin_FontEnd.ViewModel
             var uc = new DashboardUC();
             SwitchScreen(uc);
         }
-
-        [STAThread]
-        private void OnReceived(string eventName, SocketIOResponse response)
-        {
-            var packet = new InPacket(response);
-            var data = packet.Data;
-            switch (eventName)
-            {
-                case SocketClient.SocketClient.EventName.CONNECT_SUCCESS:
-                    ShowGuiLogin();
-                    break;
-                case SocketClient.SocketClient.EventName.CREATE_NEW_WALLET:
-                    PrivateKey = data.GetProperty("privateKey").ToString();
-                    PublicKey = data.GetProperty("publicKey").ToString();                  
-                    this.ShowGuiCreateWalletSuccessful();
-                    break;
-                case SocketClient.SocketClient.EventName.GET_WALLET_DATA:
-                    Balance = (float)data.GetProperty("balance").GetDecimal();
-                    break;
-                case SocketClient.SocketClient.EventName.CREATE_TRANSACTION:
-                    ProcessCreateTransaction(response);
-                    break;
-                case SocketClient.SocketClient.EventName.PENDING_TRANSACTIONS:
-                    
-                    var pendingTransactions = data.GetProperty("pendingTransactions");
-                    Console.WriteLine($"pendingTransactions: {pendingTransactions}");
-                    break;
-            }
-        }
-        private void ProcessCreateTransaction(SocketIOResponse response)
-        {
-            var packet = new InPacket(response);
-            var data = packet.Data;
-            Console.WriteLine($"[ProcessCreateWallet] {data}");
-           
-        }
-
-
     }
 }

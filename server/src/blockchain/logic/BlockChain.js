@@ -17,7 +17,7 @@ const BlockChain = cc.Class.extend({
         this.chain = [this.createGenesisBlock()];
         this.pendingTransactions = [];
 
-        this.difficulty = 1;
+        this.difficulty = 5;
         this.miningReward = 100;
     },
 
@@ -180,7 +180,7 @@ const BlockChain = cc.Class.extend({
 
 
         this.pendingTransactions.push(transaction);
-        console.log('[BlockChain] addTransaction', 'transaction added: ' + JSON.stringify(transaction));
+        console.log('[BlockChain] addTransaction', 'transaction added: ' + JSON.stringify(transaction.transactionId));
         return true;
     },
 

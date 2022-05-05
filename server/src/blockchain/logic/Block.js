@@ -16,7 +16,6 @@ const Block = cc.Class.extend({
         this.previousHash = previousHash;
         this.nonce = 0;
         this.hash = this.calculateHash();
-        console.log('create hash', this.hash, this.index);
     },
     calculateHash: function () {
         return crypto.createHash('sha256').update(this.index + this.timestamp + this.previousHash + JSON.stringify(this.transactions) + this.nonce).digest('hex');
@@ -32,7 +31,7 @@ const Block = cc.Class.extend({
             this.hash = this.calculateHash();
         }
 
-        console.log("Block mined: " + this.hash, this.index);
+        console.log("Block mined: " + this.nonce, this.hash, this.index);
     },
 
     hasValidTransaction: function () {

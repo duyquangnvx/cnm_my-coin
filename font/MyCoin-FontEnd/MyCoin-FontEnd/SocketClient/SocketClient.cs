@@ -26,6 +26,7 @@ namespace MyCoin_FontEnd.SocketClient
             public const string CREATE_NEW_WALLET = "CREATE_NEW_WALLET";
             public const string GET_WALLET_DATA = "GET_WALLET_DATA";
             public const string CREATE_TRANSACTION = "CREATE_TRANSACTION";
+            public const string MINE_BLOCK = "MINE_BLOCK";
             public const string PENDING_TRANSACTIONS = "PENDING_TRANSACTIONS";
             public const string ACCESS_MY_WALLET = "ACCESS_MY_WALLET";
         }

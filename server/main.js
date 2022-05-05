@@ -40,14 +40,22 @@ console.log(`Balance of Omen is ${myCoin.getBalanceOfAddress(omenAddress)}`);
 console.log(`Balance of TomQ is ${myCoin.getBalanceOfAddress(tomQAddress)}`);
 
 // Create a transaction & sign it with your key
-const tx1 = myCoin.createNewTransaction(omenAddress, tomQAddress, 99);
+const tx1 = myCoin.createNewTransaction(omenAddress, tomQAddress, 2);
 tx1.signTransactionWithPrivateKey(omenWalletKey);
 // tx1.signTransaction(myWalletKey);
 myCoin.addTransactionToPendingTransactions(tx1);
+
+console.time('TEST');
+const tx2 = myCoin.createNewTransaction(omenAddress, tomQAddress, 10);
+tx2.signTransactionWithPrivateKey(omenWalletKey);
+myCoin.addTransactionToPendingTransactions(tx2);
+
+
+
 // Mine block
 console.log("TomQ is mining...");
 myCoin.mineTransactionInTransactionPool(tomQAddress);
-
+console.timeEnd('TEST')
 console.log();
 console.log(`Balance of Omen is ${myCoin.getBalanceOfAddress(omenAddress)}`);
 console.log(`Balance of TomQ is ${myCoin.getBalanceOfAddress(tomQAddress)}`);
