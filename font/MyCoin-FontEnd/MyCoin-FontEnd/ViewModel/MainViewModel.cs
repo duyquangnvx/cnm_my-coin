@@ -1,4 +1,5 @@
-﻿using MyCoin_FontEnd.SocketClient;
+﻿using MyCoin_FontEnd.Model;
+using MyCoin_FontEnd.SocketClient;
 using MyCoin_FontEnd.UC;
 using SocketIOClient;
 using System;
@@ -21,13 +22,23 @@ namespace MyCoin_FontEnd.ViewModel
         private float _transactionAmount = 0f;
         private string _transactionToAddress = String.Empty;
         private string _transactionPrivateKey = String.Empty;
+        private int numOfNetworkNodes = 0;
         private bool _isMining = false;
-
+        private List<Transaction> pendingTransactions;
+        private List<Transaction> transactions;
+        private List<Transaction> history;
+        private List<Block> blocks;
         public MainWindow MainWindow { get; set; }
         public InputTransactionWindow InputTransactionWindow { get; set; }
         #endregion
 
         #region Properties
+        public int NumOfNetworkNodes { get => numOfNetworkNodes; set { numOfNetworkNodes = value; OnPropertyChanged(); } }
+        public List<Transaction> PendingTransactions { get => pendingTransactions; set { pendingTransactions = value; OnPropertyChanged(); } }
+        public List<Transaction> Transactions { get => transactions; set { transactions = value; OnPropertyChanged(); } }
+        public List<Transaction> History { get => history; set { history = value; OnPropertyChanged(); } }
+        public List<Block> Blocks { get => blocks; set { blocks = value; OnPropertyChanged(); } }
+        public UserControl CurrentTableUC { get; set; }
         public UserControl CurrentUC { get; set; }
         public UserControl PreviousUC { get; set; }
         public string PrivateKey { get => _privateKey; set { _privateKey = value; OnPropertyChanged(); } }
@@ -49,6 +60,12 @@ namespace MyCoin_FontEnd.ViewModel
         public ICommand InputTransactionCmd { get; set; }
         public ICommand MiningBlockCmd { get; set; }
         public ICommand CreateTransactionCmd { get; set; }
+        public ICommand CopyPublicKeyCmd { get; set; }
+        public ICommand LogoutCmd { get; set; }
+        public ICommand LoadBlocksCmd { get; set; }
+        public ICommand LoadTransactionsCmd { get; set; }
+        public ICommand LoadPendingTransactionCmd { get; set; }
+        public ICommand LoadHistoryCmd { get; set; }
         #endregion
 
         public MainViewModel()
@@ -56,7 +73,13 @@ namespace MyCoin_FontEnd.ViewModel
             SocketClient.SocketClient.Connector.Connect();
             SocketClient.SocketClient.Connector.OnReceived += OnReceived;
             InitCommands();
+
+            PendingTransactions = new List<Transaction>();
+            Transactions = new List<Transaction>();
+            History = new List<Transaction>();
+            Blocks = new List<Block>();
         }
+
 
 
         private void InitCommands()
@@ -110,7 +133,8 @@ namespace MyCoin_FontEnd.ViewModel
                 (p) => { return true; },
                 (p) =>
                 {
-                    
+                    SocketClient.SocketClient.Connector.Disconnect();
+                    Console.WriteLine("CloseWindowCommand-Disconnect");
                 });
 
             CreateWalletCmd = new RelayCommand<object[]>(
@@ -142,10 +166,51 @@ namespace MyCoin_FontEnd.ViewModel
                 (p) => { return true; },
                 (p) =>
                 {
-                    var text = String.Format($"Publib Key: {PublicKey}\nPrivate Key: {PrivateKey}");
+                    var text = String.Format($"Public Key: {PublicKey}\nPrivate Key: {PrivateKey}");
                     Clipboard.SetDataObject(text);
                     ShowGuiDashboard();
                 });
+
+            CopyPublicKeyCmd = new RelayCommand<object>(
+                (p) => { return true; },
+                (p) =>
+                {
+                    Clipboard.SetDataObject(PublicKey);
+                    ShowGuiDashboard();
+                });
+
+            LogoutCmd = new RelayCommand<object>(
+                (p) => { return true; },
+                (p) =>
+                {
+                    var packet = new OutPacket(SocketClient.SocketClient.EventName.LOGOUT);
+                    SocketClient.SocketClient.Connector.SendPacket(packet);
+                    ShowGuiLogin();
+                });
+            LoadPendingTransactionCmd = new RelayCommand<object>(
+                (p) => { return true; },
+                (p) =>
+                {
+                    SwitchTable(new TablePendingTransaction());
+                });
+            LoadBlocksCmd = new RelayCommand<object>(
+               (p) => { return true; },
+               (p) =>
+               {
+                   SwitchTable(new TableBlock());
+               });
+            LoadTransactionsCmd = new RelayCommand<object>(
+               (p) => { return true; },
+               (p) =>
+               {
+                   SwitchTable(new TableTransaction());
+               });
+            LoadHistoryCmd = new RelayCommand<object>(
+               (p) => { return true; },
+               (p) =>
+               {
+                   SwitchTable(new TableHistory());
+               });
         }
 
         private void RequestGetWalletData()
@@ -154,6 +219,39 @@ namespace MyCoin_FontEnd.ViewModel
             SocketClient.SocketClient.Connector.SendPacket(packet);
         }
 
+        internal List<Transaction> UnpackTransactions(System.Text.Json.JsonElement jsonTransactions)
+        {
+            var tempList = jsonTransactions.EnumerateArray().ToList();
+            var transactions = new List<Transaction>();
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                var transaction = new Transaction();
+                transaction.TransactionId = tempList[i].GetProperty("transactionId").GetString();
+                transaction.Timestamp = tempList[i].GetProperty("timestamp").GetDecimal();
+                transaction.Amount = (float)tempList[i].GetProperty("amount").GetDecimal();
+                transaction.Sender = tempList[i].GetProperty("sender").GetString();
+                transaction.Recipient = tempList[i].GetProperty("recipient").GetString();
+                transactions.Add(transaction);
+            }
+            return transactions;
+        }
+        internal List<Block> UnpackBlock(System.Text.Json.JsonElement jsonBlock)
+        {
+            var tempList = jsonBlock.EnumerateArray().ToList();
+            var blocks = new List<Block>();
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                var block = new Block();
+                block.Index = tempList[i].GetProperty("index").GetInt32();
+                block.Timestamp = tempList[i].GetProperty("timestamp").GetDecimal();           
+                block.Nonce = tempList[i].GetProperty("nonce").GetInt32();
+                block.Hash = tempList[i].GetProperty("hash").GetString();
+               
+                block.TransactionLength = tempList[i].GetProperty("transactions").GetArrayLength();
+                blocks.Add(block);
+            }
+            return blocks;
+        }
         [STAThread]
         private void OnReceived(string eventName, SocketIOResponse response)
         {
@@ -171,6 +269,14 @@ namespace MyCoin_FontEnd.ViewModel
                     break;
                 case SocketClient.SocketClient.EventName.GET_WALLET_DATA:
                     Balance = (float)data.GetProperty("balance").GetDecimal();
+                    var addressTransactions = data.GetProperty("addressTransactions");
+                    History = UnpackTransactions(addressTransactions);
+
+                    var allTransaction = data.GetProperty("allTransaction");
+                    Transactions = UnpackTransactions(allTransaction);
+
+                    var blocks = data.GetProperty("blocks");
+                    Blocks = UnpackBlock(blocks);
                     break;
                 case SocketClient.SocketClient.EventName.MINE_BLOCK:
                     IsMining = false;
@@ -183,7 +289,13 @@ namespace MyCoin_FontEnd.ViewModel
                 case SocketClient.SocketClient.EventName.PENDING_TRANSACTIONS:
                     var pendingTransactions = data.GetProperty("pendingTransactions");
                     Console.WriteLine($"pendingTransactions: {pendingTransactions}");
+
+                    PendingTransactions = UnpackTransactions(pendingTransactions);
+
                     RequestGetWalletData();
+                    break;
+                case SocketClient.SocketClient.EventName.NUM_OF_NETWORK_NODE:
+                    NumOfNetworkNodes = data.GetProperty("numOfNetworkNodes").GetInt32();
                     break;
             }
         }
@@ -212,6 +324,19 @@ namespace MyCoin_FontEnd.ViewModel
             }
         }
 
+
+        internal void SwitchTable(object sender)
+        {
+            var screen = (UserControl)sender;
+
+            if (screen != null)
+            {
+                CurrentTableUC = screen;
+                CurrentTableUC.DataContext = this;
+                OnPropertyChanged(CurrentTableUC.Name);
+            }
+        }
+
         public void HideGui(Window gui)
         {
             if (gui != null)
@@ -223,6 +348,7 @@ namespace MyCoin_FontEnd.ViewModel
         {
             var uc = new LoginUC();
             SwitchScreen(uc);
+            PreviousUC = null;
         }
 
         public void ShowGuiCreateWalletSuccessful()
@@ -241,6 +367,7 @@ namespace MyCoin_FontEnd.ViewModel
         {
             var uc = new DashboardUC();
             SwitchScreen(uc);
+            PreviousUC = null;
         }
     }
 }

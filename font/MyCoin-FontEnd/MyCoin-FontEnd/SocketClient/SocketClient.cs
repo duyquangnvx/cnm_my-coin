@@ -28,6 +28,8 @@ namespace MyCoin_FontEnd.SocketClient
             public const string CREATE_TRANSACTION = "CREATE_TRANSACTION";
             public const string MINE_BLOCK = "MINE_BLOCK";
             public const string PENDING_TRANSACTIONS = "PENDING_TRANSACTIONS";
+            public const string NUM_OF_NETWORK_NODE = "NUM_OF_NETWORK_NODE";
+            public const string LOGOUT = "LOGOUT";
             public const string ACCESS_MY_WALLET = "ACCESS_MY_WALLET";
         }
     }
@@ -65,9 +67,9 @@ namespace MyCoin_FontEnd.SocketClient
                 await socketClient.ConnectAsync();
             }
         }
-        public void Disconnect()
+        public async void Disconnect()
         {
-            socketClient.DisconnectAsync();
+            await socketClient.DisconnectAsync();
         }
         public void SendPacket(OutPacket packet)
         {

@@ -124,6 +124,8 @@
     <Compile Include="InputTransactionWindow.xaml.cs">
       <DependentUpon>InputTransactionWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Block.cs" />
+    <Compile Include="Model\Transaction.cs" />
     <Compile Include="SocketClient\SocketClient.cs" />
     <Compile Include="UC\ControlBarUC.xaml.cs">
       <DependentUpon>ControlBarUC.xaml</DependentUpon>
@@ -139,6 +141,18 @@
     </Compile>
     <Compile Include="UC\LoginUC.xaml.cs">
       <DependentUpon>LoginUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC\TableBlock.xaml.cs">
+      <DependentUpon>TableBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC\TableHistory.xaml.cs">
+      <DependentUpon>TableHistory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC\TablePendingTransaction.xaml.cs">
+      <DependentUpon>TablePendingTransaction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC\TableTransaction.xaml.cs">
+      <DependentUpon>TableTransaction.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\ControlBarViewModel.cs" />
@@ -181,6 +195,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UC\LoginUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\TableBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\TableHistory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\TablePendingTransaction.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\TableTransaction.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
