@@ -55,7 +55,7 @@ namespace MyCoin_FontEnd.UC {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Simple-Caro;component/uc/tablependingtransaction.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/MyCoin_FontEnd;component/uc/tablependingtransaction.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\UC\TablePendingTransaction.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

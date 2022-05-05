@@ -1,11 +1,26 @@
 {
+  "main": "src/bin/www.js",
+  "scripts": {
+    "start": "cross-env DEBUG=app* HTTP_PORT=3001 PORT=3001 nodemon src/bin/www.js",
+    "start2": "cross-env DEBUG=app* HTTP_PORT=3002 PORT=3002 PEERS=ws://localhost:3001 nodemon src/bin/www.js",
+    "start3": "cross-env DEBUG=app* HTTP_PORT=3003 PORT=3003 PEERS=ws://localhost:3001,ws://localhost:3002 nodemon src/bin/www.js",
+    "demo": "cross-env DEMO=true DEBUG=app* nodemon src/index.js",
+    "dev": "webpack --progress --colors --config build/webpack.dev.config.js",
+    "prod": "webpack --progress --colors --config build/webpack.prod.config.js",
+    "test": "./node_modules/.bin/mocha --recursive --require @babel/register",
+    "lint": "eslint --fix --ext .js,.vue src test/unit/specs test/e2e/specs",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect",
+    "prepublish": "npm run snyk-protect"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cross-env": "^7.0.3",
     "crypto-js": "^4.0.0",
     "elliptic": "^6.5.4",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
-    "nodemon": "^2.0.7",
+    "nodemon": "^2.0.16",
     "socket.io": "^4.5.0",
     "uuidv1": "^1.6.14"
   }

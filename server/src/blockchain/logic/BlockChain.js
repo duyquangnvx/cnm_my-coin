@@ -50,10 +50,6 @@ const BlockChain = cc.Class.extend({
         return new Transaction(sender, recipient, amount);
     },
 
-    proofOfWork: function (previousBlockHash, current) {
-
-    },
-
     isChainValid: function () {
         // Check if the Genesis block hasn't been tampered with by comparing
         // the output of createGenesisBlock with the first block on our chain

@@ -16,6 +16,7 @@ namespace MyCoin_FontEnd.ViewModel
     public class MainViewModel : BaseViewModel
     {
         #region Private members
+        private string _port = String.Empty;
         private string _privateKey = String.Empty;
         private string _publicKey = String.Empty;
         private float _balance = 0f;
@@ -33,6 +34,7 @@ namespace MyCoin_FontEnd.ViewModel
         #endregion
 
         #region Properties
+        public string Port { get => _port; set { _port = value; OnPropertyChanged(); } }
         public int NumOfNetworkNodes { get => numOfNetworkNodes; set { numOfNetworkNodes = value; OnPropertyChanged(); } }
         public List<Transaction> PendingTransactions { get => pendingTransactions; set { pendingTransactions = value; OnPropertyChanged(); } }
         public List<Transaction> Transactions { get => transactions; set { transactions = value; OnPropertyChanged(); } }
@@ -51,6 +53,7 @@ namespace MyCoin_FontEnd.ViewModel
         #endregion
 
         #region Commands
+        public ICommand ConnectSocketCmd { get; set; }
         public ICommand CloseWindowCommand { get; set; }
         public ICommand BackToPrevScreenCmd { get; set; }
         public ICommand CreateWalletCmd { get; set; }
@@ -70,20 +73,28 @@ namespace MyCoin_FontEnd.ViewModel
 
         public MainViewModel()
         {
-            SocketClient.SocketClient.Connector.Connect();
-            SocketClient.SocketClient.Connector.OnReceived += OnReceived;
             InitCommands();
 
             PendingTransactions = new List<Transaction>();
             Transactions = new List<Transaction>();
             History = new List<Transaction>();
             Blocks = new List<Block>();
+
+            SwitchScreen(new ConnectSocketUC());
         }
 
 
 
         private void InitCommands()
         {
+            ConnectSocketCmd = new RelayCommand<object[]>(
+               (p) => { return !String.IsNullOrEmpty(Port); },
+               (p) =>
+               {
+                   SocketClient.SocketClient.CreateConnection("3001");
+                   SocketClient.SocketClient.Connector.Connect();
+                   SocketClient.SocketClient.Connector.OnReceived += OnReceived;
+               });
             InputTransactionCmd = new RelayCommand<object[]>(
                 (p) => { return true; },
                 (p) =>
@@ -133,7 +144,11 @@ namespace MyCoin_FontEnd.ViewModel
                 (p) => { return true; },
                 (p) =>
                 {
-                    SocketClient.SocketClient.Connector.Disconnect();
+                    if (SocketClient.SocketClient.Connector != null)
+                    {
+                        SocketClient.SocketClient.Connector.Disconnect();
+
+                    }
                     Console.WriteLine("CloseWindowCommand-Disconnect");
                 });
 

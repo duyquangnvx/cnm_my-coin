@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CB9B94FA-9C88-4DA7-8511-3264DB190864}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Simple_Caro</RootNamespace>
-    <AssemblyName>Simple-Caro</AssemblyName>
+    <RootNamespace>MyCoin_FontEnd</RootNamespace>
+    <AssemblyName>MyCoin_FontEnd</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -127,6 +127,9 @@
     <Compile Include="Model\Block.cs" />
     <Compile Include="Model\Transaction.cs" />
     <Compile Include="SocketClient\SocketClient.cs" />
+    <Compile Include="UC\ConnectSocketUC.xaml.cs">
+      <DependentUpon>ConnectSocketUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UC\ControlBarUC.xaml.cs">
       <DependentUpon>ControlBarUC.xaml</DependentUpon>
     </Compile>
@@ -175,6 +178,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resource\Resource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\ConnectSocketUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

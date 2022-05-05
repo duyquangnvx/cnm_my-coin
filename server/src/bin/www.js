@@ -1,7 +1,10 @@
 const app = require('../app.js').app;
 const http = require('http');
+const BlockChainData = require("../blockchain/data/BlockChainData");
 
-const port = normalizePort(process.env.PORT || '3000');
+BlockChainData.init();
+
+const port = normalizePort(process.env.PORT || process.argv[2]);
 app.set('port', port);
 
 const server = require('../app').server;
@@ -55,5 +58,6 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     console.log('Listening on ' + bind);
+
 
 }

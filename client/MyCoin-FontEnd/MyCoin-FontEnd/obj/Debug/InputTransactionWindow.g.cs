@@ -55,7 +55,7 @@ namespace MyCoin_FontEnd {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Simple-Caro;component/inputtransactionwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/MyCoin_FontEnd;component/inputtransactionwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\InputTransactionWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

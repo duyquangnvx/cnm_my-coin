@@ -13,7 +13,6 @@ router.get('/', function(req, res, next) {
 
 module.exports = function (io) {
     //Socket.IO
-    BlockChainData.init();
 
     io.on('connection', (socket) => {
         console.log("New user connected", socket.id);

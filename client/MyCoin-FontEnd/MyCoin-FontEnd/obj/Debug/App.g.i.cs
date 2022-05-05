@@ -52,7 +52,7 @@ namespace MyCoin_FontEnd {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Simple-Caro;component/app.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/MyCoin_FontEnd;component/app.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\App.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

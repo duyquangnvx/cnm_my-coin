@@ -17,7 +17,14 @@ namespace MyCoin_FontEnd.SocketClient
         private static Connector connector;
         static SocketClient()
         {
-            connector = new Connector();
+            
+        }
+        public static void CreateConnection(string port)
+        {
+            if (connector == null)
+            {
+                connector = new Connector(port);
+            }
         }
 
         public static class EventName
@@ -38,9 +45,9 @@ namespace MyCoin_FontEnd.SocketClient
     {
         private SocketIO socketClient;
         public Action<string, SocketIOResponse> OnReceived;
-        public Connector()
+        public Connector(string port)
         {
-            var uri = new Uri("http://localhost:3000/");
+            var uri = new Uri($"http://localhost:{port}/");
             socketClient = new SocketIO(uri);
             socketClient.OnConnected += OnFinishConnect;
             socketClient.OnDisconnected += OnDisconnected;
