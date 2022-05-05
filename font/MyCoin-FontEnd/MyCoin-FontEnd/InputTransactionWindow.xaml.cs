@@ -1,5 +1,4 @@
-﻿using MyCoin_FontEnd.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,20 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace MyCoin_FontEnd
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for InputTransactionWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class InputTransactionWindow : Window
     {
-        public MainWindow()
+        public InputTransactionWindow()
         {
             InitializeComponent();
         }
-
     }
 }

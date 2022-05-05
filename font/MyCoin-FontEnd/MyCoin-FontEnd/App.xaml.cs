@@ -17,7 +17,7 @@ namespace MyCoin_FontEnd
         {
             base.OnStartup(e);
 
-            this.MainWindow = new LoginWindow();
+            this.MainWindow = new MainWindow();
             this.MainWindow.Show();
         }
     }

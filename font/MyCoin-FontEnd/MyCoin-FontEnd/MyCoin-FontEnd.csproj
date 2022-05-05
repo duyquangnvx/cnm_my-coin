@@ -121,32 +121,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CreateWalletSuccessWindow.xaml.cs">
-      <DependentUpon>CreateWalletSuccessWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="InputPrivateKeyWindow.xaml.cs">
-      <DependentUpon>InputPrivateKeyWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LoginWindow.xaml.cs">
-      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    <Compile Include="InputTransactionWindow.xaml.cs">
+      <DependentUpon>InputTransactionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="SocketClient\SocketClient.cs" />
     <Compile Include="UC\ControlBarUC.xaml.cs">
       <DependentUpon>ControlBarUC.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UC\CreateWalletSuccessUC.xaml.cs">
+      <DependentUpon>CreateWalletSuccessUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC\DashboardUC.xaml.cs">
+      <DependentUpon>DashboardUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC\InputPublicKeyUC.xaml.cs">
+      <DependentUpon>InputPublicKeyUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC\LoginUC.xaml.cs">
+      <DependentUpon>LoginUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\ControlBarViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Page Include="CreateWalletSuccessWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="InputPrivateKeyWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LoginWindow.xaml">
+    <Page Include="InputTransactionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -167,6 +165,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UC\ControlBarUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\CreateWalletSuccessUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\DashboardUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\InputPublicKeyUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC\LoginUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

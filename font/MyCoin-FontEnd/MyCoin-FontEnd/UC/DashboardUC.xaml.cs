@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyCoin_FontEnd
+namespace MyCoin_FontEnd.UC
 {
     /// <summary>
-    /// Interaction logic for InputPrivateKeyWindow.xaml
+    /// Interaction logic for DashboardUC.xaml
     /// </summary>
-    public partial class InputPrivateKeyWindow : Window
+    public partial class DashboardUC : UserControl
     {
-        public InputPrivateKeyWindow()
+        public DashboardUC()
         {
             InitializeComponent();
         }

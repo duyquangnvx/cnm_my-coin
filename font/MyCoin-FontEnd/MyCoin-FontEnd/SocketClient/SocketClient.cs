@@ -22,7 +22,11 @@ namespace MyCoin_FontEnd.SocketClient
 
         public static class EventName
         {
+            public const string CONNECT_SUCCESS = "CONNECT_SUCCESS";
             public const string CREATE_NEW_WALLET = "CREATE_NEW_WALLET";
+            public const string GET_WALLET_DATA = "GET_WALLET_DATA";
+            public const string CREATE_TRANSACTION = "CREATE_TRANSACTION";
+            public const string PENDING_TRANSACTIONS = "PENDING_TRANSACTIONS";
             public const string ACCESS_MY_WALLET = "ACCESS_MY_WALLET";
         }
     }

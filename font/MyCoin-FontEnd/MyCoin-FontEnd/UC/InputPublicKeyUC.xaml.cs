@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyCoin_FontEnd
+namespace MyCoin_FontEnd.UC
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for InputPublicKeyUC.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class InputPublicKeyUC : UserControl
     {
-        public LoginWindow()
+        public InputPublicKeyUC()
         {
             InitializeComponent();
         }

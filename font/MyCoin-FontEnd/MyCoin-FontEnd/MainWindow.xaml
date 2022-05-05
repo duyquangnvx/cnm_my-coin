@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:MyCoin_FontEnd"
         mc:Ignorable="d"
         
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:uc="clr-namespace:MyCoin_FontEnd.UC"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -19,81 +20,29 @@
         ResizeMode="NoResize"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"       
-        Title="My Coin" Height="600" Width="1024"
+        Title="My Coin" Height="640" Width="1200"
         DataContext="{StaticResource MainVM}"
         x:Name="MainWd">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding CloseWindowCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <DockPanel>
         <Grid DockPanel.Dock="Top">
             <uc:ControlBarUC Tag="{Binding ElementName=MainWd, Path=Title}"/>
         </Grid>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Button DockPanel.Dock="Top" HorizontalAlignment="Left"              
+                materialDesign:ButtonAssist.CornerRadius="0"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                IsDefault="True"
+                Content="{materialDesign:PackIcon KeyboardBackspace}"
+                Command="{Binding BackToPrevScreenCmd}">
+        </Button>
 
-            <StackPanel Grid.Column="0">
-                <StackPanel.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="LightGray" Offset="1"/>
-                        <GradientStop Color="#FFE6E6E6"/>
-                    </LinearGradientBrush>
-                </StackPanel.Background>
-
-                <StackPanel.Effect>
-                    <DropShadowEffect BlurRadius="20" Color="#FFDEDEDE" RenderingBias="Quality" ShadowDepth="1"/>
-                </StackPanel.Effect>
-
-                <Grid Height="100" Background="#FF6F8AE4">
-                    <TextBlock Text="8 Puzzle" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF96B2EA" FontSize="36" FontFamily="Showcard Gothic"/>
-                </Grid>
-
-                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
-                    <Grid Width="150">
-                        <materialDesign:PackIcon Kind="GamepadVariantOutline" VerticalAlignment="Center"/>
-                        <TextBlock Text="CHƠI TIẾP" HorizontalAlignment="Center"></TextBlock>
-                    </Grid>
-                </Button>
-
-                <Button x:Name="btnNewGame" Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
-                    <Grid Width="150">
-                        <materialDesign:PackIcon Kind="NewBox" VerticalAlignment="Center"/>
-                        <TextBlock Text="CHƠI MỚI" HorizontalAlignment="Center"></TextBlock>
-                    </Grid>
-                </Button>
-
-                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
-                    <Grid Width="150">
-                        <materialDesign:PackIcon Kind="Image" VerticalAlignment="Center"/>
-                        <TextBlock Text="CHỌN ẢNH" HorizontalAlignment="Center"></TextBlock>
-                    </Grid>
-                </Button>
-
-                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
-                    <Grid Width="150">
-                        <materialDesign:PackIcon Kind="HelpBox" VerticalAlignment="Center"/>
-                        <TextBlock Text="GIÚP ĐỠ" HorizontalAlignment="Center"></TextBlock>
-                    </Grid>
-                </Button>
-
-                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
-                    <Grid Width="150">
-                        <materialDesign:PackIcon Kind="InfoCircle" VerticalAlignment="Center"/>
-                        <TextBlock Text="THÔNG TIN" HorizontalAlignment="Center"></TextBlock>
-                    </Grid>
-                </Button>
-
-                <Button Margin="10" Background="#FF6F96E4" BorderBrush="#FF6F96E4">
-                    <Grid Width="150">
-                        <materialDesign:PackIcon Kind="ExitToApp" VerticalAlignment="Center"/>
-                        <TextBlock Text="THOÁT" HorizontalAlignment="Center"></TextBlock>
-                    </Grid>
-                </Button>
-
-
-            </StackPanel>
-
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ContentControl Content="{Binding CurrentUC}"/>
         </Grid>
     </DockPanel>
 </Window>

@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MyCoin_FontEnd
+namespace MyCoin_FontEnd.UC
 {
     /// <summary>
-    /// Interaction logic for CreateWalletSuccessWindow.xaml
+    /// Interaction logic for LoginUC.xaml
     /// </summary>
-    public partial class CreateWalletSuccessWindow : Window
+    public partial class LoginUC : UserControl
     {
-        public CreateWalletSuccessWindow()
+        public LoginUC()
         {
             InitializeComponent();
         }
