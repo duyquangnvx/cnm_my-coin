@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="MyCoin_FontEnd.UC.CreateWalletSuccessUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyCoin_FontEnd.UC"
+             mc:Ignorable="d" 
+             d:DesignHeight="380" d:DesignWidth="640"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="20"
+            TextOptions.TextFormattingMode="Ideal"
+            TextOptions.TextRenderingMode="Auto"
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
+    <DockPanel>
+
+
+        <materialDesign:Card Margin="40">
+
+            <Grid Margin="32">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="3*"/>
+
+
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Left"
+                       FontSize="24" Text="Your private key:" FontWeight="Bold"/>
+
+                <TextBlock Grid.Row="1" 
+                       VerticalAlignment="Top" 
+                       HorizontalAlignment="Left"
+                       FontSize="20" Text="{Binding PrivateKey}" FontWeight="Normal"/>
+
+                <TextBlock Grid.Row="2" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Left"
+                       FontSize="24" Text="Your public key:" FontWeight="Bold"/>
+
+                <TextBlock Grid.Row="3" 
+                       VerticalAlignment="Top" 
+                       HorizontalAlignment="Left"
+                       FontSize="20" Text="{Binding PublicKey}" FontWeight="Normal"/>
+
+                <Button Grid.Row="4" Height="40" Width="160" HorizontalAlignment="Left"
+                    materialDesign:ButtonAssist.CornerRadius="4"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    IsDefault="True"
+                    Command="{Binding CopyPrivateKeyCmd}">
+                    <Grid>
+                        <TextBlock Text="Copy to clipboard" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+            </Grid>
+        </materialDesign:Card>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="MyCoin_FontEnd.UC.LoginUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyCoin_FontEnd.UC"
+             mc:Ignorable="d" 
+             d:DesignHeight="340" d:DesignWidth="500"
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        
+            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+            TextElement.FontWeight="Regular"
+            TextElement.FontSize="20"
+            TextOptions.TextFormattingMode="Ideal"
+            TextOptions.TextRenderingMode="Auto"
+            Background="{DynamicResource MaterialDesignPaper}"
+            FontFamily="{DynamicResource MaterialDesignFont}">
+    <DockPanel>
+
+
+        <materialDesign:Card Margin="40">
+
+            <Grid Margin="32">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" 
+                       VerticalAlignment="Top" 
+                       HorizontalAlignment="Center"
+                       FontSize="32" Text="Welcome" FontWeight="Bold"/>
+
+                <Button Grid.Row="1" Height="40"    
+                    materialDesign:ButtonAssist.CornerRadius="4"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    IsDefault="True"
+                    Command="{Binding CreateWalletCmd}">
+                    <Grid Width="160">
+                        <materialDesign:PackIcon Kind="NewBox" VerticalAlignment="Center"/>
+                        <TextBlock Text="Create New Wallet" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+
+                <Button Grid.Row="2" Height="40"                     
+                    materialDesign:ButtonAssist.CornerRadius="4"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    IsDefault="True"
+                    Command="{Binding InputPublicKeyCmd}">
+                    <Grid Width="160">
+                        <materialDesign:PackIcon Kind="LockOpen" VerticalAlignment="Center"/>
+                        <TextBlock Text="Access Your Wallet" HorizontalAlignment="Center"></TextBlock>
+                    </Grid>
+                </Button>
+            </Grid>
+        </materialDesign:Card>
+    </DockPanel>
+</UserControl>
+
