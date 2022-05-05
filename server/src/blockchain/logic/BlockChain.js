@@ -17,7 +17,7 @@ const BlockChain = cc.Class.extend({
         this.chain = [this.createGenesisBlock()];
         this.pendingTransactions = [];
 
-        this.difficulty = 5;
+        this.difficulty = 2;
         this.miningReward = 100;
     },
 
@@ -112,10 +112,15 @@ const BlockChain = cc.Class.extend({
             }
         });
 
+        let allTransaction = this.getAllTransactions();
+        let blocks = this.getAllBlocks();
+
         return {
             addressTransactions: addressTransactions,
             addressBalance: balance,
-            amountArr: amountArr
+            amountArr: amountArr,
+            allTransaction: allTransaction,
+            blocks: blocks,
         };
     },
 
@@ -201,6 +206,27 @@ const BlockChain = cc.Class.extend({
         }
 
         return balance;
+    },
+
+    getAllBlocks: function () {
+        const list = [];
+        for (const block of this.chain) {
+            list.push(block);
+        }
+
+        return list;
+    },
+
+    getAllTransactions: function () {
+        const txs = [];
+        for (const block of this.chain) {
+            let transactions = block.transactions;
+            for (const tx of transactions) {
+                txs.push(tx);
+            }
+        }
+
+        return txs;
     },
 
     getAllTransactionsForWallet: function (address) {

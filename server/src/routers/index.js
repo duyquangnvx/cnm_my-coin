@@ -19,12 +19,18 @@ module.exports = function (io) {
         console.log("New user connected", socket.id);
         //
         socket.emit('CONNECT_SUCCESS');
-
         let broadcastPendingTransaction = function (pendingTransactions) {
             io.emit('PENDING_TRANSACTIONS', {
                 pendingTransactions: pendingTransactions
             });
         };
+
+        let broadcastNumOfNetworkNodes = function (numOfNetworkNodes) {
+            io.emit('NUM_OF_NETWORK_NODE', {
+                numOfNetworkNodes: numOfNetworkNodes
+            });
+        };
+
         let broadcastAddressData = function (nodes) {
             nodes.forEach(socketNode => {
                 const address = socketNode.currentNodeUrl;
@@ -41,10 +47,12 @@ module.exports = function (io) {
                 socket.emit('GET_WALLET_DATA', {
                     balance: addressData.addressBalance,
                     addressTransactions: addressData.addressTransactions,
-                    amountArr: addressData.amountArr
+                    amountArr: addressData.amountArr,
+                    allTransaction: addressData.allTransaction,
+                    blocks: addressData.blocks
                 });
             }
-            console.log('emitAddressData', addressData.addressBalance);
+
         };
 
         socket.onAny((event, data) => {
@@ -60,6 +68,7 @@ module.exports = function (io) {
                     });
                     emitAddressData(socket, address);
                     broadcastPendingTransaction(BlockChainData.backup.pendingTransactions);
+                    broadcastNumOfNetworkNodes(BlockChainData.nodes.length);
                     break;
                 case 'GET_WALLET_DATA':
                     if (data.length >= 1) {
@@ -75,14 +84,7 @@ module.exports = function (io) {
                         socket.emit('MINE_BLOCK', {
                             reward: reward
                         });
-                        emitAddressData(socket, address);
                         broadcastPendingTransaction(BlockChainData.backup.pendingTransactions);
-
-                        const lastBlock = BlockChainData.backup.getLatestBlock();
-                        const transactions = lastBlock.transactions;
-                        for (const trans in transactions) {
-
-                        }
                     }
                     break;
                 case 'CREATE_TRANSACTION':
@@ -96,24 +98,26 @@ module.exports = function (io) {
                         const ret = BlockChainData.backup.addTransactionToPendingTransactions(newTransaction);
                         console.log('[CREATE_TRANSACTION] ', BlockChainData.backup.getBalanceOfAddress(sender));
                         broadcastPendingTransaction(BlockChainData.backup.pendingTransactions);
-                        // if (ret) {
-                        //     let pt = null;
-                        //     BlockChainData.nodes.forEach(socketNode => {
-                        //         socketNode.addTransactionToPendingTransactions(newTransaction);
-                        //         pt = socketNode.pendingTransactions;
-                        //     });
-                        //
-                        // }
                     }
+                    break;
+                case 'LOGOUT':
+                    console.log(`User: ${socket.id} was logout`);
+                    BlockChainData.removeNodeBySocketId(socket.id);
+                    broadcastNumOfNetworkNodes(BlockChainData.nodes.length);
                     break;
             }
         });
+
+        socket.on('disconnect', (data) => {
+            console.log(`User: ${socket.id} was disconnected`);
+            BlockChainData.removeNodeBySocketId(socket.id);
+            broadcastNumOfNetworkNodes(BlockChainData.nodes.length);
+        })
         //End ON Events
     });
 
     io.on('disconnect', (socket) => {
-        console.log(`User: ${socket.id} was disconnected`);
-        BlockChainData.removeNodeBySocketId(socket.id.toString());
+
     });
 
     return router;

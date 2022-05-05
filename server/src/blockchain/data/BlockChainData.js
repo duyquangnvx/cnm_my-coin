@@ -34,10 +34,11 @@ const BlockChainData = (function () {
             return this.nodes;
         },
         removeNodeBySocketId: function (socketId) {
-            let index = this.nodes.findIndex(socket => socket.id === socketId);
+            let index = this.nodes.findIndex(socketNode => socketNode.socketId === socketId);
             if (index >= 0) {
                 this.nodes.splice(index, 1);
             }
+            console.log("removeNodeBySocketId", index, this.nodes.length)
         },
     }
 
